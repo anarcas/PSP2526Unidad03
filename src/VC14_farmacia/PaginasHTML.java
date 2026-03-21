@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package VC13_farmacia;
+package VC14_farmacia;
 
-import java.util.Arrays;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -33,44 +33,46 @@ public class PaginasHTML {
         String pedidoRealizado = "";
         String mensajeStockHTML = "";
         String mensajeFinal = "";
-        String color;
-
-        System.out.println(Arrays.asList(farmacia.nombreMedicamento).indexOf(medSeleccionado));
-
-        int indice = Arrays.asList(farmacia.nombreMedicamento).indexOf(medSeleccionado);
-
-        if (indice != -1 && (farmacia.stockMedicamento[indice] == 0 || cantidad > farmacia.stockMedicamento[indice])) {
-            color = "#FF0000";
-        } else {
-            color = "#155724";
-        }
-
-        // Mensaje de éxito
-        if (medSeleccionado != null && !medSeleccionado.isBlank()) {
-            pedidoRealizado = "<div style='background:#d4edda; color:" + color + "; padding:15px; "
-                    + "border-radius:6px; margin-bottom:20px; border:1px solid #c3e6cb;'>"
-                    + "<b>" + mensaje + "</b>"
-                    + "</div>";
-            mensajeStockHTML = "<div style='background:#d4edda; color:#155724; padding:15px; "
-                    + "border-radius:6px; margin-bottom:20px; border:1px solid #c3e6cb;'>"
-                    + "<b>" + mensajeStock + "</b>"
-                    + "</div>";
-            if (farmacia.cerrar()) {
-                mensajeFinal = "<div style='background:#d4edda; color:#FF0000; padding:15px; "
-                        + "border-radius:6px; margin-bottom:20px; border:1px solid #c3e6cb;'>"
-                        + "<b>Sin STOCK!!<br/>Farmacia Cerrada!!</b>"
-                        + "</div>";
-            }
-        }
-
-        // Generar las opciones de medicamentos del combobox
+        String color = null;
         String opcionesSelect = "";
-        for (String m : farmacia.nombreMedicamento) {
-            opcionesSelect = opcionesSelect
-                    + "<option value='" + m + "'>" + m + "</option>";
-        }
 
-        return "<html><head><title>Farmacia Central</title><meta charset='UTF-8'>"
+        for (ConcurrentHashMap.Entry<String, Integer> entry : farmacia.stock.entrySet()) {
+            System.out.println(" " + entry.getKey() + ": " + entry.getValue());
+
+            if (medSeleccionado.equalsIgnoreCase(entry.getKey()) && (entry.getValue() == 0 || cantidad > entry.getValue())) {
+                color = "#FF0000";
+            } else {
+                color = "#155724";
+            }
+
+            // Generar las opciones de medicamentos del combobox
+            opcionesSelect = opcionesSelect
+                    + "<option value='" + entry.getKey() + "'>" + entry.getKey() + "</option>";
+        }
+    
+
+    // Mensaje de éxito
+    if (medSeleccionado
+
+    != null && !medSeleccionado.isBlank () 
+        ) {
+            pedidoRealizado = "<div style='background:#d4edda; color:" + color + "; padding:15px; "
+                + "border-radius:6px; margin-bottom:20px; border:1px solid #c3e6cb;'>"
+                + "<b>" + mensaje + "</b>"
+                + "</div>";
+        mensajeStockHTML = "<div style='background:#d4edda; color:#155724; padding:15px; "
+                + "border-radius:6px; margin-bottom:20px; border:1px solid #c3e6cb;'>"
+                + "<b>" + mensajeStock + "</b>"
+                + "</div>";
+        if (farmacia.cerrar()) {
+            mensajeFinal = "<div style='background:#d4edda; color:#FF0000; padding:15px; "
+                    + "border-radius:6px; margin-bottom:20px; border:1px solid #c3e6cb;'>"
+                    + "<b>Sin STOCK!!<br/>Farmacia Cerrada!!</b>"
+                    + "</div>";
+        }
+    }
+
+    return "<html><head><title>Farmacia Central</title><meta charset='UTF-8'>"
                 + "<style>"
                 + "body{font-family:Arial; background:linear-gradient(135deg, #e0f2f1, #80cbc4); text-align:center; padding-top:60px;}"
                 + ".contenedor{background:white; display:inline-block; padding:30px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); width:400px;}"
@@ -81,7 +83,7 @@ public class PaginasHTML {
                 + "<div class='contenedor'>"
                 + "<h1>🌿 Sistema de Pedidos</h1>"
                 + pedidoRealizado
-                + "<form method='POST' action='/pedido'>"
+    + "<form method='POST' action='/pedido'>"
                 + "  <div style='text-align:left; color:#555; font-size:14px; margin-bottom:5px;'>Medicamento:</div>"
                 + "  <select name='medicamento'>" + opcionesSelect + "</select>"
                 + "  <div style='text-align:left; color:#555; font-size:14px; margin-top:10px; margin-bottom:5px;'>Cantidad:</div>"
@@ -89,8 +91,9 @@ public class PaginasHTML {
                 + "  <button type='submit' style='margin-top:15px;'>🚀 LANZAR PEDIDO</button>"
                 + "</form>"
                 + mensajeStockHTML
-                + mensajeFinal
-                + "</div>"
+    + mensajeFinal
+
++ "</div>"
                 + "</body></html>";
     }
 
