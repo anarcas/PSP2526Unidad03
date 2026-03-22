@@ -22,6 +22,16 @@ public class Farmacia {
 
     public static int numPedido = 0;
 
+    public static int getNumPedido() {
+        return numPedido;
+    }
+
+    public static void setNumPedido(int numPedido) {
+        Farmacia.numPedido = numPedido;
+    }
+
+    
+    
     public String procesarCompra(String producto, int cantidad) {
 
         String resultado;

@@ -35,6 +35,7 @@ public class PaginasHTML {
         String mensajeFinal = "";
         String color = null;
         String opcionesSelect = "";
+        String mensajeNumPedidos = null;
 
         for (ConcurrentHashMap.Entry<String, Integer> entry : farmacia.stock.entrySet()) {
             System.out.println(" " + entry.getKey() + ": " + entry.getValue());
@@ -59,6 +60,10 @@ public class PaginasHTML {
             mensajeStockHTML = "<div style='background:#d4edda; color:#155724; padding:15px; "
                     + "border-radius:6px; margin-bottom:20px; border:1px solid #c3e6cb;'>"
                     + "<b>" + mensajeStock + "</b>"
+                    + "</div>";
+            mensajeNumPedidos = "<div style='background:#d4edda; color:#155724; padding:15px; "
+                    + "border-radius:6px; margin-bottom:20px; border:1px solid #c3e6cb;'>"
+                    + "<b>Nº de pedido: " + Farmacia.getNumPedido() + "</b>"
                     + "</div>";
             if (farmacia.cerrar()) {
                 mensajeFinal = "<div style='background:#d4edda; color:#FF0000; padding:15px; "
@@ -87,6 +92,7 @@ public class PaginasHTML {
                 + "  <button type='submit' style='margin-top:15px;'>🚀 LANZAR PEDIDO</button>"
                 + "</form>"
                 + mensajeStockHTML
+                + mensajeNumPedidos
                 + mensajeFinal
                 + "</div>"
                 + "</body></html>";

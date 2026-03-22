@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package VC14_farmacia;
+package VC15_hotel;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,11 +19,11 @@ public class HiloServidor implements Runnable {
     private final int NOTFOUND = 404;
 
     private Socket socket;
-    private Farmacia farmacia;
+    private Hotel hotel;
 
-    public HiloServidor(Socket s, Farmacia farmacia) {
+    public HiloServidor(Socket s, Hotel hotel) {
         this.socket = s;
-        this.farmacia = farmacia;
+        this.hotel = hotel;
     }
 
     @Override
@@ -65,29 +65,24 @@ public class HiloServidor implements Runnable {
 
                 if (ruta.equals("/")) {
 
-                    respuestaHTML = construirRespuesta(OK, PaginasHTML.html_farmacia(this.farmacia, "", "","",0));
+                    respuestaHTML = construirRespuesta(OK, PaginasHTML.html_hotel(this.hotel, "", "",0));
 
-                } else if (ruta.startsWith("/pedido") && peticion.startsWith("GET")) {
+                } else if (ruta.startsWith("/reservar") && peticion.startsWith("GET")) {
 
-                    respuestaHTML = construirRespuesta(OK, PaginasHTML.html_farmacia(this.farmacia, "", "","",0));
+                    respuestaHTML = construirRespuesta(OK, PaginasHTML.html_hotel(this.hotel, "","", 0));
 
-                } else if (ruta.startsWith("/pedido") && peticion.startsWith("POST")) {
+                } else if (ruta.startsWith("/reservar") && peticion.startsWith("POST")) {
 
                     System.out.println("Linea separación: " + cuerpo.toString());
-                    String nombreMedicamento = cuerpo.toString().split("&")[0].split("=")[1].split("\\+")[0];
-                    String composicion = cuerpo.toString().split("&")[0].split("=")[1].split("\\+")[1];
-                    String medicamento = nombreMedicamento + " " + composicion;
-                    System.out.println("Nombre: " + medicamento);
-                    Integer cantidad = Integer.parseInt(cuerpo.toString().split("&")[1].split("=")[1]);
-                    System.out.println("Cantidad: " + cantidad);
                     
-                    // Se incrementa la variable pedidos
-                    Farmacia.setNumPedido(Farmacia.getNumPedido()+1);
+                    String diaSemana = cuerpo.toString().split("&")[0].split("=")[1];
+                    System.out.println("Día de la semana: " + diaSemana);
+                    Integer numReservas = Integer.parseInt(cuerpo.toString().split("&")[1].split("=")[1]);
+                    System.out.println("Cantidad: " + numReservas);
                     
-                    String mensajePedido = farmacia.procesarCompra(medicamento, cantidad);
-                    String mensajeStock=farmacia.mostrarStockHTML();
+                    String mensajeReserva = Hotel.actualizarFichero(diaSemana, numReservas);
 
-                    respuestaHTML = construirRespuesta(OK, PaginasHTML.html_farmacia(this.farmacia, medicamento, mensajePedido,mensajeStock, cantidad));
+                    respuestaHTML = construirRespuesta(OK, PaginasHTML.html_hotel(this.hotel, diaSemana, mensajeReserva,numReservas));
 
                 } else {
 

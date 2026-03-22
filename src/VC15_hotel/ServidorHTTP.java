@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package VC14_farmacia;
+package VC15_hotel;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -21,7 +21,7 @@ public class ServidorHTTP {
         // TODO code application logic here
         
         // Recurso compartido
-        Farmacia viva = new Farmacia();
+        Hotel nhConvenciones = new Hotel();
         
         ServerSocket servidor = new ServerSocket(12349);
         System.out.println("Servidor arrancado en http://localhost:12349");
@@ -29,7 +29,7 @@ public class ServidorHTTP {
         
         while (true) {
             Socket cliente = servidor.accept();
-            new Thread(new HiloServidor(cliente, viva)).start();
+            new Thread(new HiloServidor(cliente, nhConvenciones)).start();
         }
         
     }
